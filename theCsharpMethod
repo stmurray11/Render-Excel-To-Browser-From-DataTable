@@ -1,0 +1,21 @@
+ public static void renderExcelToBrowserFromDataTable(HttpResponse res, ref DataTable dt)
+        {
+            if (dt.Rows.Count > 0)
+            {
+                string filename = "TheFileNameYouWant" + DateTime.Now.Millisecond.ToString() + ".xls";
+                System.IO.StringWriter tw = new System.IO.StringWriter();
+                System.Web.UI.HtmlTextWriter hw = new System.Web.UI.HtmlTextWriter(tw);
+                System.Web.UI.WebControls.DataGrid dgGrid = new System.Web.UI.WebControls.DataGrid();
+                dgGrid.DataSource = dt;
+                dgGrid.DataBind();
+                //Get the HTML for the control.
+                dgGrid.RenderControl(hw);
+                //Write the HTML back to the browser.
+                res.Clear();
+                res.AddHeader("content-disposition", "attachment; filename=" + filename);
+                res.Charset = "";
+                res.ContentType = "application/vnd.ms-word";
+                res.Write(tw.ToString());
+                res.End();
+            }
+        }
